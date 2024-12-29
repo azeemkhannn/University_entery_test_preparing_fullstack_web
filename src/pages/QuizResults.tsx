@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { RotateCcw, Home } from 'lucide-react';
 import DashboardLayout from '../components/dashboard/DashboardLayout';
@@ -6,141 +6,246 @@ import ScoreSummary from '../components/results/ScoreSummary';
 import SubjectBreakdown from '../components/results/SubjectBreakdown';
 import StudyProgress from '../components/results/StudyProgress';
 import ImprovementTips from '../components/results/ImprovementTips';
+import { set } from 'mongoose';
 
 export default function QuizResults() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [userid, setUserId] = React.useState('');
+  const [analytics, setAnalytics] = React.useState({});
+  const [subjectAnalytics, setSubjectAnalytics] = React.useState([]);
+  const [progressData, setProgress] = React.useState([]);
+  const [improvementData, setImprovement] = React.useState([]);
+
+  useEffect(() => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  setUserId(user.id);
+  handelperformance();
+  handlesubjectanalytics();
+  handleprogress();
+  handleimprovement();
+  }, []);
+
+  const handelperformance =async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/analytics/performance',{
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({_id: userid}),
+
+      });
+      if(response.ok){
+      const data = await response.json();
+      setAnalytics(data);
+     
+      
+    }
+    }catch(err) {
+      console.error(err);
+    }
+    
+  };
+
+  const handlesubjectanalytics =async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/analytics/subjects',{
+        method: 'post',
+        headers: {
+          'Content-Type': 'application',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({_id: userid}),
+      }
+    );
+    if(response.ok){
+      const data = await response.json();
+      setSubjectAnalytics(data);
+      
+    }
+    }catch(err) {
+      console.error(err);
+    }
+  };
+
 
   // Mock data - replace with actual API data
-  const analytics = {
-    totalQuizzes: 1,
-    totalTime: 2400,
-    highestScore: 70,
-    lowestScore: 70,
-    averageScore: 70
-  };
+  // const analytics = {
+  //   totalQuizzes: 1,
+  //   totalTime: 2400,
+  //   highestScore: 70,
+  //   lowestScore: 70,
+  //   averageScore: 70
+  // };
 
-  const subjectAnalytics = [
-    {
-      _id: "Biology",
-      totalAttempts: 1,
-      subject: "Biology",
-      averageScore: 70,
-      accuracy: 70
-    },
-    {
-      _id: "Chemistry",
-      totalAttempts: 1,
-      subject: "Chemistry",
-      averageScore: 62.5,
-      accuracy: 62.5
-    }
-  ];
+  // const subjectAnalytics = [
+  //   {
+  //     _id: "Biology",
+  //     totalAttempts: 1,
+  //     subject: "Biology",
+  //     averageScore: 70,
+  //     accuracy: 70
+  //   },
+  //   {
+  //     _id: "Chemistry",
+  //     totalAttempts: 1,
+  //     subject: "Chemistry",
+  //     averageScore: 62.5,
+  //     accuracy: 62.5
+  //   }
+  // ];
 
-  const progressData = [
-    {
-      quizzesTaken: 2,
-      date: "2024-12-27",
-      averageScore: 66.25
+  const handleprogress = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/analytics/progress',{
+        method: 'post',
+        headers: {
+          'Content-Type': 'application',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({_id: userid}),
+      }
+    );
+    if(response.ok){
+      const data = await response.json();
+      setProgress(data);
+      
     }
-  ];
+    }
+    catch(err) {
+      console.error(err);
+    }
+  }
+
+  // const progressData = [
+  //   {
+  //     quizzesTaken: 2,
+  //     date: "2024-12-27",
+  //     averageScore: 66.25
+  //   }
+  // ];
+
+  const handleimprovement = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/analytics/suggestions',{
+        method: 'post',
+        headers: {
+          'Content-Type': 'application',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({_id: userid}),
+      }
+    );
+    if(response.ok){
+      const data = await response.json();
+      setImprovement(data);
+      
+      
+    }
+    }
+    catch(err) {
+      console.error(err);
+    }
+  }
 
   const handleRetake = () => {
-    navigate('/dashboard/start-quiz');
+    navigate('/dashboard/quizzes');
   };
 
 
 
-  const improvementData = [
-    {
-        "subject": "Chemistry",
-        "incorrectCount": 3,
-        "suggestions": [
-            {
-                "questionId": "6763126b670eedc465543085",
-                "explanation": "Mars is known as the Red Planet."
-            },
-            {
-                "questionId": "6763128b670eedc4655430a3",
-                "explanation": "Mars is known as the Red Planet."
-            },
-            {
-                "questionId": "6763128b670eedc4655430a4",
-                "explanation": "The capital of France is Paris."
-            }
-        ],
-        "recommendedTopics": [
-            "Study organic reaction mechanisms",
-            "Review periodic table trends",
-            "Practice balancing equations"
-        ],
-        "practiceResources": [
-            {
-                "type": "video",
-                "title": "Organic Chemistry Basics",
-                "duration": "30 mins"
-            },
-            {
-                "type": "quiz",
-                "title": "Periodic Table Quiz",
-                "questions": 25
-            },
-            {
-                "type": "problems",
-                "title": "Balancing Equations Set",
-                "count": 10
-            }
-        ]
-    },
-    {
-        "subject": "Biology",
-        "incorrectCount": 6,
-        "suggestions": [
-            {
-                "questionId": "6768429fc0d266123f556e90",
-                "explanation": "Mars is known as the Red Planet."
-            },
-            {
-                "questionId": "6768429fc0d266123f556e91",
-                "explanation": "The capital of France is Paris."
-            },
-            {
-                "questionId": "6768429fc0d266123f556e93",
-                "explanation": "The capital of France is Paris."
-            },
-            {
-                "questionId": "6768429fc0d266123f556e94",
-                "explanation": "Mars is known as the Red Planet."
-            },
-            {
-                "questionId": "6768429fc0d266123f556e95",
-                "explanation": "The capital of France is Paris."
-            }
-        ],
-        "recommendedTopics": [
-            "Review cell structure and function",
-            "Study molecular biology concepts",
-            "Focus on human anatomy"
-        ],
-        "practiceResources": [
-            {
-                "type": "video",
-                "title": "Cell Biology Overview",
-                "duration": "40 mins"
-            },
-            {
-                "type": "quiz",
-                "title": "Human Systems Quiz",
-                "questions": 30
-            },
-            {
-                "type": "problems",
-                "title": "Genetics Problem Set",
-                "count": 12
-            }
-        ]
-    }
-];
+//   const improvementData = [
+//     {
+//         "subject": "Chemistry",
+//         "incorrectCount": 3,
+//         "suggestions": [
+//             {
+//                 "questionId": "6763126b670eedc465543085",
+//                 "explanation": "Mars is known as the Red Planet."
+//             },
+//             {
+//                 "questionId": "6763128b670eedc4655430a3",
+//                 "explanation": "Mars is known as the Red Planet."
+//             },
+//             {
+//                 "questionId": "6763128b670eedc4655430a4",
+//                 "explanation": "The capital of France is Paris."
+//             }
+//         ],
+//         "recommendedTopics": [
+//             "Study organic reaction mechanisms",
+//             "Review periodic table trends",
+//             "Practice balancing equations"
+//         ],
+//         "practiceResources": [
+//             {
+//                 "type": "video",
+//                 "title": "Organic Chemistry Basics",
+//                 "duration": "30 mins"
+//             },
+//             {
+//                 "type": "quiz",
+//                 "title": "Periodic Table Quiz",
+//                 "questions": 25
+//             },
+//             {
+//                 "type": "problems",
+//                 "title": "Balancing Equations Set",
+//                 "count": 10
+//             }
+//         ]
+//     },
+//     {
+//         "subject": "Biology",
+//         "incorrectCount": 6,
+//         "suggestions": [
+//             {
+//                 "questionId": "6768429fc0d266123f556e90",
+//                 "explanation": "Mars is known as the Red Planet."
+//             },
+//             {
+//                 "questionId": "6768429fc0d266123f556e91",
+//                 "explanation": "The capital of France is Paris."
+//             },
+//             {
+//                 "questionId": "6768429fc0d266123f556e93",
+//                 "explanation": "The capital of France is Paris."
+//             },
+//             {
+//                 "questionId": "6768429fc0d266123f556e94",
+//                 "explanation": "Mars is known as the Red Planet."
+//             },
+//             {
+//                 "questionId": "6768429fc0d266123f556e95",
+//                 "explanation": "The capital of France is Paris."
+//             }
+//         ],
+//         "recommendedTopics": [
+//             "Review cell structure and function",
+//             "Study molecular biology concepts",
+//             "Focus on human anatomy"
+//         ],
+//         "practiceResources": [
+//             {
+//                 "type": "video",
+//                 "title": "Cell Biology Overview",
+//                 "duration": "40 mins"
+//             },
+//             {
+//                 "type": "quiz",
+//                 "title": "Human Systems Quiz",
+//                 "questions": 30
+//             },
+//             {
+//                 "type": "problems",
+//                 "title": "Genetics Problem Set",
+//                 "count": 12
+//             }
+//         ]
+//     }
+// ];
 
 
 
@@ -160,17 +265,17 @@ export default function QuizResults() {
             <SubjectBreakdown analytics={subjectAnalytics} />
           </div>
 
-          {/* Study Progress */}
-          <div className="lg:col-span-3">
-          <ImprovementTips improvements={improvementData} />
-            
-          </div>
-
           {/* Improvement Tips */}
           <div className="lg:col-span-2">
           <StudyProgress progress={progressData} />
           </div>
         </div>
+
+          {/* Study Progress */}
+          <div className="lg:col-span-3">
+          <ImprovementTips improvements={improvementData} />
+            
+          </div>
 
         {/* Action Buttons */}
         <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">

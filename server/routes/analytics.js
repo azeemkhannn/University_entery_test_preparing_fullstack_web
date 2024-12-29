@@ -12,9 +12,9 @@ const router = express.Router();
 router.use(protect);
 router.use(student);
 
-router.get('/performance', getPerformanceAnalytics);
-router.get('/subjects', getSubjectWiseAnalysis);
-router.get('/suggestions', getImprovementSuggestions);
-router.get('/progress', getStudyProgress);
+router.post('/performance', getPerformanceAnalytics);
+router.post('/subjects', getSubjectWiseAnalysis);
+router.post('/suggestions', getImprovementSuggestions);
+router.post('/progress', getStudyProgress);
 
 export default router;
