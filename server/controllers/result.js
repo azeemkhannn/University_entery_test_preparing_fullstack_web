@@ -36,7 +36,7 @@ export const submitQuiz = async (req, res) => {
 
     const feedback = generateFeedback(result, quiz);
     
-    console.log('feedback',feedback, 'result', result);
+    // console.log('feedback',feedback, 'result', result);
 
     res.status(201).json({
       result,

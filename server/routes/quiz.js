@@ -31,7 +31,7 @@ router.post('/:id/upload-questions',
   uploadQuestions
 );
 
-router.route('/getquizzes')
+router.route('/getquizzes-for-attempts')
   .post(student, attemptsQuizzes);
 
 router.route('/quizpage')

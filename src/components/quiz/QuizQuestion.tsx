@@ -24,9 +24,7 @@ export default function QuizQuestion({
 
 
 
-  if (!question || !question.options) {
-    return <p className="text-red-500">Question data is unavailable.</p>;
-  }
+  
 
   return (
     <div className="space-y-6">

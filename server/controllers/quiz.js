@@ -166,44 +166,19 @@ export const uploadQuestions = async (req, res) => {
 
 export const attemptsQuizzes = async (req, res) => {
   try {
-        const { testType, selectedQuizType, selectedSubject } = req.body; // Retrieve data from the body
+        const { testType,quizId } = req.body; // Retrieve data from the body
   
         // Check for required fields in the body
-        if (!testType || !selectedQuizType) {
+        if (!testType || !quizId) {
           return res.status(400).json({ error: 'testType and quizType are required' });
         }
-  
-        let query = {};
-  
-        // If quizType is 'full', fetch quizzes by testType (category)
-        if (selectedQuizType === 'full') {
-          query = { category: testType };
-          
-          const quizzes = await Quiz.find(query);
-  
-          if (quizzes.length === 0) {
-            return res.status(404).json({ message: 'No quizzes found' });
-          }
-          res.status(200).json({quizzes:quizzes});
-        } 
-  
-        // If quizType is 'subject', fetch quizzes by testType and subject
-        else if (selectedQuizType === 'subject' && selectedSubject) {
-          query = { category: testType, subject:selectedSubject };
-  
-          const quizzes = await Quiz.findOne(query);
-  
-          if (quizzes.length === 0) {
-            return res.status(404).json({ message: 'No quizzes found' });
-          }
-  
-          res.status(200).json( quizzes);
-        } 
-        // Invalid quizType or missing subject for 'subject' quizType
-        else {
-          return res.status(400).json({ error: 'Invalid quizType or subject is missing for subject quiz' });
+
+        const quiz = await Quiz.findById(quizId);
+        if (!quiz) {
+          return res.status(404).json({ message: 'Quiz not found' });
         }
-  
+        
+        res.status(200).json(quiz);
         
         
       } catch (error) {

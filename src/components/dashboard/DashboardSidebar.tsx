@@ -20,9 +20,10 @@ export default function DashboardSidebar({faculty}:props) {
   
   const navigation = [
     { name: 'Dashboard', icon: Home, href: '/dashboard' },
-    { name: 'Select Test', icon: ShapesIcon, href: '/dashboard/select-test' },
     {name:'Quizzes',icon:BookOpen,href:'/dashboard/quizzes'},
-    { name: 'Start Quiz', icon: PenTool, href: '/dashboard/start-quiz' },
+    { name: 'Select Test', icon: PenTool, href: '/dashboard/select-test' },
+    
+    // { name: 'Start Quiz', icon: PenTool, href: '/dashboard/start-quiz' },
     { name: 'Results', icon: BarChart2, href: '/dashboard/results' },
     // { name: 'Profile', icon: User, href: '/dashboard/profile' },
     

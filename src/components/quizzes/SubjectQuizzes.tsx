@@ -39,8 +39,8 @@ export default function SubjectQuizzes({
       (selectedDifficulty === 'all' || quiz.difficulty === selectedDifficulty)
   );
 
-  const handleStartQuiz = (quizId: number) => {
-    navigate(`/dashboard/start-quiz?test=${testType}&quiz=${quizId}&type=subject`);
+  const handleStartQuiz = (quizId: number,suject:string) => {
+    navigate(`/dashboard/start-quiz?test=${testType}&quizid=${quizId}&type=${suject}`);
   };
 
   const getDifficultyColor = (difficulty: string = '') => {
@@ -103,7 +103,7 @@ export default function SubjectQuizzes({
             </div>
 
             <button
-              onClick={() => handleStartQuiz(quiz._id)}
+              onClick={() => handleStartQuiz(quiz._id,quiz.subject)}
               className="mt-6 w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Start Quiz
