@@ -93,7 +93,7 @@ export default function StartQuiz() {
   const [isloading, setIsLoading] = useState(true);
   const [timeTaken, setTimeTaken] = useState(0);
   
-  const questionsPerPage = 10;
+  const questionsPerPage = 5;
   const totalPages = Math.ceil(mockQuestions.length / questionsPerPage);
 
   

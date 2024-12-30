@@ -11,7 +11,7 @@ export default function WelcomeSection({ name }: WelcomeSectionProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h1 className="text-2xl font-bold text-gray-900">
-        {greeting}, {name}! 👋
+        {greeting}, {name||'Student'}! 👋
       </h1>
       <p className="mt-2 text-gray-600">
         Ready to continue your test preparation journey? Here's your progress overview.

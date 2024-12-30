@@ -1,21 +1,34 @@
 import Quiz from '../models/Quiz.js';
 import Result from '../models/Result.js';
 import { analyzePerformance } from '../utils/analytics.js';
+import moment from 'moment';
 
 export const getUpcomingQuizzes = async (category) => {
-  return Quiz.find({
-    category,
-    startDate: { $gt: new Date() }
-  })
-  .select('title subject timeLimit startDate')
-  .sort('startDate')
-  .limit(5);
+  try {
+    // Calculate the start of the current week (e.g., Monday)
+    const startOfWeek = moment().startOf('week').toDate();
+    const now = new Date(); // Current date and time
+
+    const quizzes = await Quiz.find({
+      category,
+      createdAt: { $gte: startOfWeek, $lte: now } // Uploaded this week
+    })
+      .select('title subject timeLimit startDate createdAt')
+      .sort('-createdAt') // Sort by newest uploaded first
+      .limit(4); // Limit to the latest 5 quizzes
+
+    return quizzes;
+  } catch (error) {
+    console.error('Error fetching this week’s quizzes:', error);
+    throw error;
+  }
 };
+
 
 export const getRecentResults = async (userId) => {
   return Result.find({ user: userId })
-    .populate('quiz', 'title subject category')
-    .select('score timeTaken answers createdAt')
+    .populate('quiz', 'title subject category answers')
+    .select('score timeTaken createdAt')
     .sort('-createdAt')
     .limit(3);
 };
@@ -24,10 +37,12 @@ export const generateStudyRecommendations = async (userId) => {
   // Get all results for performance analysis
   const results = await Result.find({ user: userId })
     .populate('quiz', 'subject category questions')
-    .select('score answers');
+    .select('score answers'); 
+    
 
   // Analyze performance by subject
   const performance = analyzePerformance(results);
+  console.log(performance);
 
   // Generate recommendations based on performance
   return generateRecommendations(performance);
@@ -82,12 +97,24 @@ const getStudyResources = (subject) => {
   return resources[subject] || [];
 };
 
-const getPracticeQuestions = (subject) => {
-  // Return sample practice questions for the subject
-  // In a real app, this would fetch from a question bank
+
+
+const getPracticeQuestions = async (subject) => {
+  // Fetch related quizzes for the subject from the database
+  const relatedQuizzes = await Quiz.find({ subject })
+    .select('title difficulty subject category')
+    .limit(5);
+    console.log(relatedQuizzes);
+
+  // Return the quizzes and additional practice question details
   return {
-    count: 10,
-    difficulty: 'adaptive',
-    estimatedTime: '20 mins'
+    relatedQuizzes: relatedQuizzes.map((quiz) => ({
+      id: quiz._id,
+      title: quiz.title,
+      difficulty: quiz.difficulty,
+      subject: quiz.subject,
+      category: quiz.category
+    })),
+    
   };
 };

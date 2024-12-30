@@ -3,7 +3,12 @@ export const analyzePerformance = (results) => {
 
   for (const result of results) {
     const { quiz, answers } = result;
-    const subject = quiz.subject;
+    const subject = quiz?.subject; // Safely access subject
+
+    if (!subject) {
+      console.warn("Quiz subject is null or undefined for one of the results.");
+      continue; // Skip this iteration if subject is invalid
+    }
 
     if (!performance[subject]) {
       performance[subject] = {
@@ -11,14 +16,14 @@ export const analyzePerformance = (results) => {
         correctAnswers: 0,
         topicPerformance: {},
         recentTrend: [],
-        averageTime: 0
+        averageTime: 0,
       };
     }
 
     // Update subject statistics
     const subjectStats = performance[subject];
-    const correctAnswers = answers.filter(answer => answer.isCorrect).length;
-    
+    const correctAnswers = answers.filter((answer) => answer.isCorrect).length;
+
     subjectStats.totalQuestions += answers.length;
     subjectStats.correctAnswers += correctAnswers;
     subjectStats.accuracy = (subjectStats.correctAnswers / subjectStats.totalQuestions) * 100;
@@ -32,6 +37,9 @@ export const analyzePerformance = (results) => {
 
   return performance;
 };
+
+// Helper functions should be defined here if they are not already
+
 
 const updateTopicPerformance = (topicPerformance, questions, answers) => {
   for (const [index, answer] of answers.entries()) {

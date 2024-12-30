@@ -134,7 +134,7 @@ export default function SelectTest() {
         if (data.selectedTest) {
           localStorage.setItem('selectedTest', data.selectedTest);
           setSelectedTest(data.selectedTest);
-          navigate(`/dashboard/start-quiz?test=${testId}`);
+          navigate(`/dashboard/quizzes`);
         }
       } else {
         console.error('Failed to update selected test:', await response.text());

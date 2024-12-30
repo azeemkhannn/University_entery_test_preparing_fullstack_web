@@ -6,13 +6,15 @@ import {
 
 export const getDashboardData = async (req, res) => {
   try {
-    const { _id: userId, selectedTest } = req.user;
+    const { userId, selectedTest } = req.body;
+    console.log('Fetching dashboard data for user:', userId);
+    console.log('Selected test type:', selectedTest);
 
     // Fetch data concurrently for better performance
     const [upcomingQuizzes, recentResults, recommendations] = await Promise.all([
       getUpcomingQuizzes(selectedTest),
       getRecentResults(userId),
-      generateStudyRecommendations(userId)
+      // generateStudyRecommendations(userId)
     ]);
 
     res.json({

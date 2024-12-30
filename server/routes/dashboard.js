@@ -7,6 +7,6 @@ const router = express.Router();
 router.use(protect);
 router.use(student);
 
-router.get('/', getDashboardData);
+router.post('/', getDashboardData);
 
 export default router;
