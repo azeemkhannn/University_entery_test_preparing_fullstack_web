@@ -4,7 +4,7 @@ import { Bell, Settings } from 'lucide-react';
 export default function DashboardHeader() {
   return (
     <header className="bg-white shadow-sm">
-      <div className="h-16 flex items-center justify-end px-4 sm:px-6 lg:px-8">
+      {/* <div className="h-16 flex items-center justify-end px-4 sm:px-6 lg:px-8">
         <div className="flex items-center space-x-4">
           <button className="p-1 rounded-full hover:bg-gray-100">
             <Bell className="h-6 w-6 text-gray-500" />
@@ -18,7 +18,7 @@ export default function DashboardHeader() {
             alt="User avatar"
           />
         </div>
-      </div>
+      </div> */}
     </header>
   );
 }

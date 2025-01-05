@@ -10,6 +10,8 @@ export const register = async (req, res) => {
       password, 
       phone, 
       userType, 
+      securityQuestion,
+      securityAnswer,
       educationLevel, 
       selectedTest 
     } = req.body;
@@ -62,7 +64,10 @@ export const register = async (req, res) => {
       phone,
       userType,
       educationLevel: userType === 'student' ? educationLevel : undefined,
-      selectedTest: userType === 'student' ? selectedTest : undefined
+      selectedTest: userType === 'student' ? selectedTest : undefined,
+      securityQuestion,
+      securityAnswer,
+      selectedTest,
     });
 
     // Generate token and send response

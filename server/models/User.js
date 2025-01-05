@@ -48,6 +48,16 @@ const userSchema = new mongoose.Schema({
     //   return this.userType === 'student';
     // }
   },
+  securityQuestion: {
+    type: String,
+    required: [true, 'Security question is required'],
+    default: "What is your mother's maiden name?"
+  },
+  securityAnswer: {
+    type: String,
+    required: [true, 'Security answer is required'],
+    select: false
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date
 }, {

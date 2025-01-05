@@ -9,7 +9,7 @@ import RecommendationPanel from '../components/analysis/RecommendationPanel';
 export default function QuizAnalysis() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { result, feedback } = location.state || {};
+  const { result, feedback, quizDetails } = location.state || {};
 
   if (!result || !feedback) {
     navigate('/dashboard');
@@ -29,7 +29,7 @@ export default function QuizAnalysis() {
               <TimeAnalysis timeManagement={feedback.timeManagement} />
             </div>
             <div className="mt-8">
-              <AnswerReview answers={result.answers} />
+              <AnswerReview answers={result.answers} quizDetails = {quizDetails} />
             </div>
           </div>
           <div className="lg:col-span-1">

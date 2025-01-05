@@ -14,7 +14,7 @@ export const getDashboardData = async (req, res) => {
     const [upcomingQuizzes, recentResults, recommendations] = await Promise.all([
       getUpcomingQuizzes(selectedTest),
       getRecentResults(userId),
-      // generateStudyRecommendations(userId)
+      generateStudyRecommendations(userId)
     ]);
 
     res.json({

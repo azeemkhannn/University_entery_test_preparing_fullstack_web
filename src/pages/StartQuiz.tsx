@@ -216,8 +216,8 @@ const handleSubmitQuiz = async () => {
     );
 
     if (response.data) {
-      console.log(response.data)
-      navigate('/dashboard/quiz-analysis', { state: { result: response.data.result, feedback: response.data.feedback } }); // Handle the response properly
+      
+      navigate('/dashboard/quiz-analysis', { state: { result: response.data.result, feedback: response.data.feedback, quizDetails: response.data.quizDetails } }); // Handle the response properly
     }
   } catch (error: any) {
     console.error('Error submitting quiz:', error);

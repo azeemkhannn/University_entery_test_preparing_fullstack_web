@@ -34,19 +34,47 @@ export const getRecentResults = async (userId) => {
 };
 
 export const generateStudyRecommendations = async (userId) => {
-  // Get all results for performance analysis
-  const results = await Result.find({ user: userId })
-    .populate('quiz', 'subject category questions')
-    .select('score answers'); 
-    
+  try {
+    // Get all results for the user
+    const results = await Result.find({ user: userId })
+      .populate('quiz', 'subject category')
+      .select('score quiz');
 
-  // Analyze performance by subject
-  const performance = analyzePerformance(results);
-  console.log(performance);
+    if (!results.length) {
+      return { message: 'No quiz results found for the user.' };
+    }
 
-  // Generate recommendations based on performance
-  return generateRecommendations(performance);
+    // Sort results by score (ascending) to find weakest performances
+    const weakestResults = results
+      .sort((a, b) => a.score - b.score) // Sort by score (lowest first)
+      .slice(0, 3); // Get the three weakest results
+
+    // Get subjects and categories of weakest quizzes
+    const weakestTopics = weakestResults.map(result => ({
+      subject: result.quiz.subject,
+      category: result.quiz.category,
+    }));
+
+    // Find new quizzes related to the weakest topics
+    const recommendedQuizzes = await Quiz.find({
+      $or: weakestTopics.map(topic => ({
+        subject: topic.subject,
+        category: topic.category,
+      })),
+      _id: { $nin: weakestResults.map(result => result.quiz._id) }, // Exclude already taken quizzes
+    })
+      .select('subject category title difficulty')
+      .limit(3); // Limit the number of recommended quizzes
+
+    return {
+      message: 'Study recommendations generated successfully.',
+      recommendations: recommendedQuizzes,
+    };
+  } catch (error) {
+    throw new Error(`Failed to generate study recommendations: ${error.message}`);
+  }
 };
+
 
 const generateRecommendations = (performance) => {
   const recommendations = [];

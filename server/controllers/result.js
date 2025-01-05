@@ -35,17 +35,27 @@ export const submitQuiz = async (req, res) => {
     await Quiz.findByIdAndUpdate(quizId, { $inc: { attempts: 1 } });
 
     const feedback = generateFeedback(result, quiz);
-    
-    // console.log('feedback',feedback, 'result', result);
+
+    // Include quiz questions with options and explanations in the response
+    const quizDetails = quiz.questions.map(question => ({
+      questionId: question._id,
+      question: question.question,
+      options: question.options,
+      explanation: question.explanation
+    }));
+
+    console.log(result, feedback, quizDetails);
 
     res.status(201).json({
       result,
-      feedback
+      feedback,
+      quizDetails
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 export const getResults = async (req, res) => {
   try {

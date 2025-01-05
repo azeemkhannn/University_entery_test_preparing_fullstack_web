@@ -55,7 +55,7 @@ export const getQuizzes = async (req, res) => {
       questions: quiz.questions.length, // Add the length of the questions array
     }));
 
-    console.log(quizzesWithQuestionCount);
+    // console.log(quizzesWithQuestionCount);
     
     res.status(200).json(quizzesWithQuestionCount); // Return quizzes with the question count as JSON response
   } catch (error) {

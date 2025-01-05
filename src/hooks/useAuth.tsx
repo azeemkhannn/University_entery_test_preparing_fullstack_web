@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('userType');
     localStorage.removeItem('user')
     localStorage.removeItem('token')
+    localStorage.removeItem('selectedTest')
     localStorage
     navigate('/');
   }, [navigate]);

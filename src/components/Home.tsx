@@ -7,16 +7,16 @@ export default function Home() {
   const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem('user'));
   // const user = localStorage.getItem('user')
-  useEffect(()=>{
-  if(user){
-    if(user.userType == 'student'){
-      navigate('/dashboard')
-    }
-    if(user.userType =='faculty'){
-      navigate('/faculty')
-    } }
-    return
-  },[navigate])
+  // useEffect(()=>{
+  // if(user){
+  //   if(user.userType == 'student'){
+  //     navigate('/dashboard')
+  //   }
+  //   if(user.userType =='faculty'){
+  //     navigate('/faculty')
+  //   } }
+  //   return
+  // },[navigate])
 
 
   const benefits = [

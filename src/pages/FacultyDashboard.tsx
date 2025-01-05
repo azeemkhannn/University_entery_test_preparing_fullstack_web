@@ -23,11 +23,11 @@ export default function FacultyDashboard() {
     setRefreshKey((prevKey) => prevKey + 1);
   }
     useEffect(() => {
-      const user = localStorage.getItem('user');
-      const userType = localStorage.getItem('userType');
-      if (!user || userType !== 'faculty') {
-        navigate('/');
-      }
+      // const user = localStorage.getItem('user');
+      // const userType = localStorage.getItem('userType');
+      // if (!user || userType !== 'faculty') {
+      //   navigate('/');
+      // }
       fetchdata();
 
     }, [refreshKey, navigate]);

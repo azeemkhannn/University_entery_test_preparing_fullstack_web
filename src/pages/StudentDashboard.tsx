@@ -10,6 +10,7 @@ export default function StudentDashboard() {
  const [selectedTest,setselectedtest] = useState('')
  const [quizdata,setquizdata] = useState([])
  const [recentresults,setrecentresults] = useState([])
+ const [recommendations,setrecommendations] = useState([])  
   // Mock user data (replace with actual user data from your auth system)
 useEffect(()=>{
 setuser(JSON.parse(localStorage.getItem('user') || '{}'));
@@ -46,7 +47,8 @@ const handledata = async () => {
     const data = await response.json();
     setquizdata(data.upcomingQuizzes); // Update quiz data state
     setrecentresults(data.recentResults); // Update recent results
-    console.log(data);
+    setrecommendations(data.recommendations.recommendations); // Update recommendations
+    
 
   } catch (error) {
     console.error('Error fetching data:', error); // Provide a descriptive error log
@@ -68,7 +70,7 @@ const handledata = async () => {
           <UpcomingQuizzes quizzes={quizdata} testType={selectedTest} />
           <PerformanceSummary  results = {recentresults}/>
         </div>
-        <StudyRecommendations />
+        <StudyRecommendations recommendations={recommendations} />
       </div>
     </DashboardLayout>
   );
