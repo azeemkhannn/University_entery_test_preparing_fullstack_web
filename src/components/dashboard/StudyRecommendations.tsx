@@ -9,14 +9,13 @@ interface Recommendation {
   subject: string;
   difficulty: string;
 }
+
 interface RecommendationPanelProps {
-  recommendations: Recommendation[];
+  recommendations: Recommendation[] | null; // Allow null or an array
 }
 
 export default function StudyRecommendations({ recommendations }: RecommendationPanelProps) {
-
-  const navigate = useNavigate()
-
+  const navigate = useNavigate();
 
   // Map subject/category to an icon
   const getIcon = (subject: string | null) => {
@@ -34,16 +33,26 @@ export default function StudyRecommendations({ recommendations }: Recommendation
     }
   };
 
-  const handlestart = (testType:string,quizId:string,subject:string)=>{
+  const handlestart = (testType: string, quizId: string, subject: string) => {
     navigate(`/dashboard/start-quiz?test=${testType}&quizid=${quizId}&type=${subject}`);
+  };
 
+  // Check if recommendations is null or empty
+  if (!recommendations || recommendations.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-gray-900">Recommended Study Areas</h2>
+        </div>
+        <p className="text-center text-gray-500">No records found</p>
+      </div>
+    );
   }
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-gray-900">Recommended Study Areas</h2>
-        
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {recommendations.map((item) => {
@@ -74,8 +83,9 @@ export default function StudyRecommendations({ recommendations }: Recommendation
                 Subject: {item.subject} <br />
                 Category: {item.category}
               </p>
-              <button className="w-full px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors"
-              onClick={()=> handlestart(item.category,item._id,item.subject)}
+              <button
+                className="w-full px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors"
+                onClick={() => handlestart(item.category, item._id, item.subject)}
               >
                 Start Now
               </button>

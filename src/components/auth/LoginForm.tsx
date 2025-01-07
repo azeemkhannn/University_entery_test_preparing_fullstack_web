@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { set } from 'mongoose';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
   const { login } = useAuth();
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -135,7 +137,9 @@ export default function LoginForm() {
             Remember me
           </label>
         </div>
-        <button type="button" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+        <button type="button" className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+        onClick={()=>navigate('/forget-password')}
+        >
           Forgot password?
         </button>
       </div>

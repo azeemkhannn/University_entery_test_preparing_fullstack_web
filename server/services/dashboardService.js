@@ -44,8 +44,15 @@ export const generateStudyRecommendations = async (userId) => {
       return { message: 'No quiz results found for the user.' };
     }
 
+    // Filter out results where quiz or subject is null
+    const validResults = results.filter(result => result.quiz && result.quiz.subject);
+
+    if (!validResults.length) {
+      return { message: 'No valid quiz results found for the user.' };
+    }
+
     // Sort results by score (ascending) to find weakest performances
-    const weakestResults = results
+    const weakestResults = validResults
       .sort((a, b) => a.score - b.score) // Sort by score (lowest first)
       .slice(0, 3); // Get the three weakest results
 
@@ -74,6 +81,8 @@ export const generateStudyRecommendations = async (userId) => {
     throw new Error(`Failed to generate study recommendations: ${error.message}`);
   }
 };
+
+
 
 
 const generateRecommendations = (performance) => {

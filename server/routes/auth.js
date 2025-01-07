@@ -12,7 +12,7 @@ router.get('/profile', protect, getProfile);
 
 // Password reset routes
 router.post('/forgot-password', initiatePasswordReset);
-router.post('/verify-security', verifySecurityAnswer);
+router.post('/verify-security', verifySecurityAnswer); 
 router.post('/reset-password', resetPassword);
 
 export default router;

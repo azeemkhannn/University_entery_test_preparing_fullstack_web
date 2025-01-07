@@ -1,4 +1,5 @@
 import Quiz from '../models/Quiz.js';
+import Result from '../models/Result.js';
 import { parseCSV, validateQuestions } from '../utils/csvParser.js';
 
 export const createQuiz = async (req, res) => {
@@ -101,19 +102,28 @@ export const updateQuiz = async (req, res) => {
 
 export const deleteQuiz = async (req, res) => {
   try {
-    const quiz = await Quiz.findById(req.params.id);
+    const quizId = req.params.id;
+
+    // Find the quiz by ID
+    const quiz = await Quiz.findById(quizId);
+
     if (!quiz) {
       return res.status(404).json({ message: 'Quiz not found' });
     }
 
-    
-
+    // Delete the quiz
     await quiz.deleteOne();
-    res.json({ message: 'Quiz deleted' });
+
+    // Delete all results associated with the quiz
+    await Result.deleteMany({ quiz: quizId });
+
+    res.json({ message: 'Quiz and related results deleted successfully' });
   } catch (error) {
+    console.error('Error deleting quiz:', error);
     res.status(500).json({ message: error.message });
   }
 };
+
 
 export const uploadQuestions = async (req, res) => {
   try {

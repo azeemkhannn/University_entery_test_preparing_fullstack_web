@@ -14,6 +14,7 @@ import Quizzes from './pages/Quizzes';
 import { AuthProvider } from './hooks/useAuth';
 import ProtectedRoute from './components/ProtectedRoute';
 import GuestRoute from './components/GuestRoute';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route element={<GuestRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path='/forget-password' element={<ForgotPassword/>}/>
         </Route>
 
           {/* Protected Routes for Students */}

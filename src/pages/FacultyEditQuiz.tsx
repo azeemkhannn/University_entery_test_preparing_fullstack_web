@@ -39,11 +39,8 @@ export default function UpdateQuiz() {
     useEffect(() => {
        
         const { _id } = location.state || {};
-        const user = localStorage.getItem('user');
-        const userType = localStorage.getItem('userType');
-        if (!user || userType !== 'faculty') {
-            navigate('/');
-        }
+       
+        
 
         const fetchQuiz = async () => {
             try {
@@ -183,7 +180,7 @@ export default function UpdateQuiz() {
 
     const handleSaveQuiz = async () => {
         const token = localStorage.getItem('token'); // Assuming the token is stored as 'token' in localStorage
-        const user = JSON.parse(localStorage.getItem('user')); // Parse user data from localStorage
+        const user = JSON.parse(localStorage.getItem('user')||''); // Parse user data from localStorage
 
         if (!token) {
             alert('User not authenticated. Please log in again.');

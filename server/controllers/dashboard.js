@@ -16,7 +16,7 @@ export const getDashboardData = async (req, res) => {
       getRecentResults(userId),
       generateStudyRecommendations(userId)
     ]);
-
+ console.log('recommend:  ',recommendations)
     res.json({
       upcomingQuizzes,
       recentResults,

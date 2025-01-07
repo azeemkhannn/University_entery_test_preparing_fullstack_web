@@ -16,9 +16,9 @@ export default function QuizResults() {
   const [subjectAnalytics, setSubjectAnalytics] = React.useState([]);
   const [progressData, setProgress] = React.useState([]);
   const [improvementData, setImprovement] = React.useState([]);
-
+  
   useEffect(() => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
   setUserId(user.id);
   handelperformance();
   handlesubjectanalytics();
@@ -53,7 +53,7 @@ export default function QuizResults() {
     try {
       const response = await fetch('http://localhost:5000/api/analytics/subjects',{
         method: 'post',
-        headers: {
+        headers: { 
           'Content-Type': 'application',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },

@@ -41,17 +41,28 @@ export const getPerformanceAnalytics = async (req, res) => {
 
 export const getSubjectWiseAnalysis = async (req, res) => {
   try {
+    // Validate user ID from request
+    const { _id } = req.user;
+    
+    if (!_id) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+    
+    
+
+
+    // Perform aggregation
     const analysis = await Result.aggregate([
-      { $match: { user: req.user._id } },
+      { $match: { user: _id } },
       {
         $lookup: {
           from: 'quizzes',
           localField: 'quiz',
           foreignField: '_id',
-          as: 'quizDetails'
-        }
+          as: 'quizDetails',
+        },
       },
-      { $unwind: '$quizDetails' },
+      { $unwind: '$quizDetails' }, // Unwind to get each quiz detail
       {
         $group: {
           _id: '$quizDetails.subject',
@@ -59,19 +70,31 @@ export const getSubjectWiseAnalysis = async (req, res) => {
           totalAttempts: { $sum: 1 },
           correctAnswers: {
             $sum: {
-              $size: {
-                $filter: {
-                  input: '$answers',
-                  as: 'answer',
-                  cond: { $eq: ['$$answer.isCorrect', true] }
-                }
-              }
-            }
+              $cond: {
+                if: { $isArray: '$answers' },
+                then: {
+                  $size: {
+                    $filter: {
+                      input: '$answers',
+                      as: 'answer',
+                      cond: { $eq: ['$$answer.isCorrect', true] },
+                    },
+                  },
+                },
+                else: 0, // Default if answers is not an array
+              },
+            },
           },
           totalQuestions: {
-            $sum: { $size: '$answers' }
-          }
-        }
+            $sum: {
+              $cond: {
+                if: { $isArray: '$answers' },
+                then: { $size: '$answers' },
+                else: 0, // Default if answers is not an array
+              },
+            },
+          },
+        },
       },
       {
         $project: {
@@ -79,20 +102,29 @@ export const getSubjectWiseAnalysis = async (req, res) => {
           averageScore: { $round: ['$averageScore', 2] },
           totalAttempts: 1,
           accuracy: {
-            $round: [
-              { $multiply: [{ $divide: ['$correctAnswers', '$totalQuestions'] }, 100] },
-              2
-            ]
-          }
-        }
-      }
+            $cond: {
+              if: { $gt: ['$totalQuestions', 0] },
+              then: {
+                $round: [
+                  { $multiply: [{ $divide: ['$correctAnswers', '$totalQuestions'] }, 100] },
+                  2,
+                ],
+              },
+              else: 0, // Default accuracy if no questions
+            },
+          },
+        },
+      },
     ]);
 
-    res.json(analysis);
+    // Send the response
+    res.status(200).json(analysis);
   } catch (error) {
+    console.error('Error in getSubjectWiseAnalysis:', error);
     res.status(500).json({ message: error.message });
   }
 };
+
 
 export const getImprovementSuggestions = async (req, res) => {
   try {

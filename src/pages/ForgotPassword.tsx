@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, HelpCircle } from 'lucide-react';
-import { authApi } from '../api/auth';
+// import { authApi } from '../api/auth';
 
 type Step = 'email' | 'security' | 'reset';
 
@@ -14,14 +14,29 @@ export default function ForgotPassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [question,setquestion] = useState('')
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
       setError('');
-      await authApi.initiatePasswordReset(email);
+      // await authApi.initiatePasswordReset(email);
+      const response = await fetch('http://localhost:5000/api/auth/forgot-password',{
+        method:'post',
+      
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')||''}`
+        },
+        body: JSON.stringify({email:email})
+      })
+      if(response.ok){
+        const data = await response.json()
+        setquestion(data.securityQuestion)
       setCurrentStep('security');
+      
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to find account');
     } finally {
@@ -34,14 +49,33 @@ export default function ForgotPassword() {
     try {
       setLoading(true);
       setError('');
-      await authApi.verifySecurityAnswer(email, securityAnswer);
+  
+      const response = await fetch('http://localhost:5000/api/auth/verify-security', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')||''}`
+          
+        },
+        body: JSON.stringify({ email, answer: securityAnswer }),
+      });
+  
+      if (!response.ok) {
+        // Extract error message from the response if available
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to verify security answer.');
+      }
+  
+      // Proceed to the next step if successful
       setCurrentStep('reset');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Incorrect answer');
+      // Handle error cases more robustly
+      setError(err.message || 'An error occurred while verifying the security answer.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,13 +86,28 @@ export default function ForgotPassword() {
     try {
       setLoading(true);
       setError('');
-      await authApi.resetPassword(email, securityAnswer, newPassword);
-      navigate('/auth', { 
-        replace: true,
-        state: { message: 'Password reset successful. Please login with your new password.' }
-      });
+      // await authApi.resetPassword(email, securityAnswer, newPassword);
+
+      const response = await fetch('http://localhost:5000/api/auth/reset-password',{
+        method:'post',
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')||''}`
+        },
+        body: JSON.stringify({email:email, securityAnswer:securityAnswer, newPassword:newPassword})
+      })
+      if(!response.ok){
+      setError('Failed to reset password')
+      console.warn(response)
+    }else{
+    navigate('/auth', { 
+      replace: true,
+      state: { message: 'Password reset successful. Please login with your new password.' }
+    });
+  }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to reset password');
+     
     } finally {
       setLoading(false);
     }
@@ -120,7 +169,7 @@ export default function ForgotPassword() {
             <form onSubmit={handleSecuritySubmit} className="space-y-6">
               <div>
                 <label htmlFor="security" className="block text-sm font-medium text-gray-700">
-                  What is your mother's maiden name?
+                  {question}
                 </label>
                 <div className="mt-1 relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
