@@ -89,21 +89,21 @@ nodemon
 Some previews of the application displayed:
 
 <p align="center">
-  <img src="screenshots/home.png" width="33%" />
-  <img src="screenshots/login.png" width="33%" />
-  <img src="screenshots/registor.png" width="33%" />
+  <img src="screenshots/home.png" width="30%" />
+  <img src="screenshots/login.png" width="30%" />
+  <img src="screenshots/registor.png" width="30%" />
 </p>
 
 <p align="center">
-  <img src="screenshots/student dash.png" width="33%" />
-  <img src="screenshots/all quiz .png" width="33%" />
-  <img src="screenshots/result tracking.png" width="33%" />
+  <img src="screenshots/student dash.png" width="30%" />
+  <img src="screenshots/all quiz .png" width="30%" />
+  <img src="screenshots/result tracking.png" width="30%" />
 </p>
 
 <p align="center">
-  <img src="screenshots/mcqs after atmp.png" width="33%" />
-  <img src="screenshots/fcaulty_dash.png" width="33%" />
-  <img src="screenshots/faculty create quiz.png" width="33%" />
+  <img src="screenshots/mcqs after atmp.png" width="30%" />
+  <img src="screenshots/fcaulty_dash.png" width="30%" />
+  <img src="screenshots/faculty create quiz.png" width="30%" />
 </p>
 
 
