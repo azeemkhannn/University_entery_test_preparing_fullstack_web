@@ -1,7 +1,7 @@
 
 ## University Entry Test Preparation Portal
 
-The **University Entry Test Preparation Portal** is a web-based platform designed to help students prepare for university entry tests. It provides quizzes, information about universities, and department-specific test materials, making test preparation more accessible and efficient.
+The **University Entry Test Preparation Portal** is a web-based platform designed to help students prepare for university entry tests. It provides quizzes, information about universities test's, and department-specific test materials, making test preparation more accessible and efficient.
 
 ## Tech Stack
 
@@ -83,6 +83,31 @@ nodemon
 ├── README.md  (Project documentation)
 ├── .gitignore  
 ```
+
+## Screenshots
+
+Some previews of the application displayed:
+
+<p align="center">
+  <img src="screenshots/home.png" width="33%" />
+  <img src="screenshots/login.png" width="33%" />
+  <img src="screenshots/registor.png" width="33%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/student dash.png" width="33%" />
+  <img src="screenshots/all quiz .png" width="33%" />
+  <img src="screenshots/result tracking.png" width="33%" />
+</p>
+
+<p align="center">
+  <img src="screenshots/mcqs after atmp.png" width="33%" />
+  <img src="screenshots/fcaulty_dash.png" width="33%" />
+  <img src="screenshots/faculty create quiz.png" width="33%" />
+</p>
+
+
+
 
 ## Contributing  
 
