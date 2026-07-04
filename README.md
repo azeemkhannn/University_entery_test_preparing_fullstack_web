@@ -50,7 +50,7 @@ npm run dev
 ### Running the Server  
 
 Navigate to the `server` folder:  
-
+ 
 ```bash
 cd server
 ```
