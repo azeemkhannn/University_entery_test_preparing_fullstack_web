@@ -16,7 +16,7 @@ The **University Entry Test Preparation Portal** is a web-based platform designe
 - University and department details  
 - Faculty user management for adding quizzes  
 
-## Installation & Setup  
+## Installation & Setup 
 
 ### Prerequisites  
 Ensure you have **Node.js** and **MongoDB** installed on your system.  
